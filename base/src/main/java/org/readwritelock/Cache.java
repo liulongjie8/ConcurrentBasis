@@ -42,4 +42,18 @@ public class Cache<K,V> {
         }
     }
 
+    V getDouble(K key){
+        readLock.lock();
+        try{
+            V v = map.get(key);
+            if(v==null){
+                // 为了应对高并发情况下， 多查一次可以减少多次查询数据的库的压力。
+                v = map.get(key);
+            }
+            return  v;
+        }finally {
+            readLock.unlock();
+        }
+    }
+
 }
