@@ -13,4 +13,34 @@ public class AnotherShare {
     private Condition condition = lock.newCondition();
 
 
+    public void incr() throws InterruptedException{
+        lock.lock();
+        try {
+            while(number!=0){
+                condition.await();
+            }
+            number++;
+            System.out.println(Thread.currentThread().getName()+" : " + number);
+            condition.signalAll();
+        }finally {
+            lock.unlock();
+        }
+
+    }
+
+    public void desc() throws  InterruptedException{
+
+        lock.lock();
+        try {
+             while(number!=1){
+                 condition.await();
+             }
+             number--;
+             System.out.println(Thread.currentThread().getName()+" : " + number);
+             condition.signalAll();
+        }finally {
+            lock.unlock();
+        }
+
+    }
 }
